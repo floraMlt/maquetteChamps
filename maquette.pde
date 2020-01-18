@@ -27,9 +27,9 @@ int img_id;
 PImage img;
 
 // tableau photomontages
-PImage[] imagesMixees; // Tableau pour mettre plusieurs images
+/*PImage[] imagesMixees; // Tableau pour mettre plusieurs images
 int imgMix_id;
-PImage imgImagine;
+PImage imgImagine;*/
 
 // tableau sons réels
 AudioPlayer[] tabSons; //21bSons;
@@ -37,15 +37,11 @@ int son_id;
 AudioPlayer audioPlay;
 
 // tableau sons imaginaires
-AudioPlayer[] tabSonsMixes; //11Mixes;
+/*AudioPlayer[] tabSonsMixes; //11Mixes;
 int sonMix_id;
-AudioPlayer audioPlayImagine;
+AudioPlayer audioPlayImagine;*/
 
 int[] counter;
-
-/*String[] paths; // Tableau pour les animations
- int video_id;
- boolean animation;*/
  
 /* void keyPressed() {
   // fonction qui détecte l'appui sur la touche du clavier espace
@@ -78,13 +74,13 @@ void setup() {
   images[3] = loadImage("zone5.jpg"); 
   images[4] = loadImage("zone6.jpg");
 
-  imagesMixees = new PImage[5];
+  /*imagesMixees = new PImage[5];
   imagesMixees[0] = loadImage("montageZone2.jpg");
   imagesMixees[1] = loadImage("montageZone3.jpg");
   imagesMixees[2] = loadImage("montageZone4.jpg");
   imagesMixees[3] = loadImage("montageZone5.jpg");
   imagesMixees[4] = loadImage("montageZone6.jpg");
-
+*/
   //Tableau sons réels
   tabSons = new AudioPlayer[21];
   tabSons[0] = minim.loadFile("zone2-1.mp3");
@@ -108,9 +104,15 @@ void setup() {
   tabSons[18] = minim.loadFile("zone6-2.mp3");
   tabSons[19] = minim.loadFile("zone6-3.mp3");
   tabSons[20] = minim.loadFile("zone6-4.mp3");
+  counter = new int[5];
+  counter[1] = 0;
+  counter[0] = 0;
+  counter[2] = 0;
+  counter[3] = 0;
+  counter[4] = 0;
 
   //Tableau sons imaginaires
-  tabSonsMixes = new AudioPlayer[11];
+  /*tabSonsMixes = new AudioPlayer[11];
   tabSonsMixes[0] = minim.loadFile("mixZone2-1.mp3", 2048);
   tabSonsMixes[1] = minim.loadFile("mixZone2-2.mp3", 2048);
   tabSonsMixes[2] = minim.loadFile("mixZone3-1.mp3", 2048);
@@ -121,10 +123,9 @@ void setup() {
   tabSonsMixes[7] = minim.loadFile("mixZone4-3.mp3", 2048);
   tabSonsMixes[8] = minim.loadFile("mixZone5-1.mp3", 2048);
   tabSonsMixes[9] = minim.loadFile("mixZone5-2.mp3", 2048);
-  tabSonsMixes[10] = minim.loadFile("mixZone6-1.mp3", 2048);
+  tabSonsMixes[10] = minim.loadFile("mixZone6-1.mp3", 2048);*/
 
   sensor = new Sensor();
-  counter = new int[5];
 }
 
 void draw() {
