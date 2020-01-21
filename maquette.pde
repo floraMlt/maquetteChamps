@@ -16,10 +16,13 @@ import ddf.minim.effects.*;
 
 SimpleOpenNI context;
 Sensor sensor;
+DreamState dream;
 Minim minim;
 
 PVector com3d = new PVector();                                   
 PVector com2d = new PVector(); 
+
+int currentState;
 
 // tableau mosaique img
 PImage[] images; // Tableau pour mettre plusieurs images
@@ -27,9 +30,9 @@ int img_id;
 PImage img;
 
 // tableau photomontages
-/*PImage[] imagesMixees; // Tableau pour mettre plusieurs images
+PImage[] imagesMixees; // Tableau pour mettre plusieurs images
 int imgMix_id;
-PImage imgImagine;*/
+PImage imgImagine;
 
 // tableau sons réels
 AudioPlayer[] tabSons; //21bSons;
@@ -37,25 +40,26 @@ int son_id;
 AudioPlayer audioPlay;
 
 // tableau sons imaginaires
-/*AudioPlayer[] tabSonsMixes; //11Mixes;
+AudioPlayer[] tabSonsMixes; //11Mixes;
 int sonMix_id;
-AudioPlayer audioPlayImagine;*/
+AudioPlayer audioPlayImagine;
 
 int[] counter;
  
-/* void keyPressed() {
+ // Evénements pour les états
+void keyPressed() {
   // fonction qui détecte l'appui sur la touche du clavier espace
   if ( key == ' ' ) {
-    sensor.state = 1;
+    currentState = 1;
   }
   if ( key == 'a' ) {
-    sensor.state = 2;
+    currentState = 2;
   }
-}*/
+}
 
 void setup() {
 
-  size(1920, 1080);
+  size(1920, 1000);
   background(0);
   context = new SimpleOpenNI(this); // initialise objet openNI
   minim = new Minim(this);
@@ -64,6 +68,7 @@ void setup() {
   com3d = new PVector(); // vecteurs permettant après de récupérer la place de l'utilisateur dans l'espace
   com2d = new PVector();
   sensor = new Sensor();
+  dream = new DreamState();
 
 
   // Tableau pour les images
@@ -74,13 +79,13 @@ void setup() {
   images[3] = loadImage("zone5.jpg"); 
   images[4] = loadImage("zone6.jpg");
 
-  /*imagesMixees = new PImage[5];
+  imagesMixees = new PImage[5];
   imagesMixees[0] = loadImage("montageZone2.jpg");
   imagesMixees[1] = loadImage("montageZone3.jpg");
   imagesMixees[2] = loadImage("montageZone4.jpg");
   imagesMixees[3] = loadImage("montageZone5.jpg");
   imagesMixees[4] = loadImage("montageZone6.jpg");
-*/
+
   //Tableau sons réels
   tabSons = new AudioPlayer[21];
   tabSons[0] = minim.loadFile("zone2-1.mp3");
@@ -104,6 +109,8 @@ void setup() {
   tabSons[18] = minim.loadFile("zone6-2.mp3");
   tabSons[19] = minim.loadFile("zone6-3.mp3");
   tabSons[20] = minim.loadFile("zone6-4.mp3");
+  
+  // counter pour le son
   counter = new int[5];
   counter[1] = 0;
   counter[0] = 0;
@@ -112,7 +119,7 @@ void setup() {
   counter[4] = 0;
 
   //Tableau sons imaginaires
-  /*tabSonsMixes = new AudioPlayer[11];
+  tabSonsMixes = new AudioPlayer[11];
   tabSonsMixes[0] = minim.loadFile("mixZone2-1.mp3", 2048);
   tabSonsMixes[1] = minim.loadFile("mixZone2-2.mp3", 2048);
   tabSonsMixes[2] = minim.loadFile("mixZone3-1.mp3", 2048);
@@ -123,18 +130,20 @@ void setup() {
   tabSonsMixes[7] = minim.loadFile("mixZone4-3.mp3", 2048);
   tabSonsMixes[8] = minim.loadFile("mixZone5-1.mp3", 2048);
   tabSonsMixes[9] = minim.loadFile("mixZone5-2.mp3", 2048);
-  tabSonsMixes[10] = minim.loadFile("mixZone6-1.mp3", 2048);*/
-
+  tabSonsMixes[10] = minim.loadFile("mixZone6-1.mp3", 2048);
+  
   sensor = new Sensor();
+  dream = new DreamState();
+  
 }
 
 void draw() {
-
-  //context.update(); // permet de récupérer des informations depuis la kinect
-
-  /*switch(sensor.state) {
+ 
+  switch(currentState) {
   default:
-    sensor.state = 1;
+    background(0);
+    currentState = 1;
+    sensor.update();
     println("Ambiance réelle par défaut");
     context.update(); // permet de récupérer des informations depuis la kinect
     img = images[img_id];
@@ -142,22 +151,18 @@ void draw() {
     audioPlay = tabSons[son_id];
     break;
 
-  case 1: // Attente*/
-    //println("Ambiance réelle");
+  case 1: // Attente
+    //background(0);
+    sensor.update();
     context.update(); // permet de récupérer des informations depuis la kinect
-    img = images[img_id];
-    image(img, width/2-img.width/2, height/2-img.height/2); // dessine l'image de la photo au centre de l'écran
-    audioPlay = tabSons[son_id];
- /*   break;
+    break;
 
   case 2: // Approche
-    println("Ambiance imaginaire");
+    background(0);
+    dream.updateD();
     context.update(); // permet de récupérer des informations depuis la kinect
-    imgImagine = imagesMixees[imgMix_id];
-    image(img, width/2-img.width/2, height/2-img.height/2); // dessine l'image de la photo au centre de l'écran
-    audioPlayImagine = tabSonsMixes[sonMix_id];
     break;
-  }*/
+  }
 
   int[] userList = context.getUsers(); // tableau de nombres entiers. Permet de capter plusieurs valeurs, plusieurs personnes
   for (int i=0; i<userList.length; i++) {
@@ -165,8 +170,9 @@ void draw() {
       // get.CoM permet de renvoyer un résultat et elle peut modifier la valeur de com3d
       context.convertRealWorldToProjective(com3d, com2d);
     }
-  }  
-  sensor.update();
+  }
+  
+  //sensor.update();
 }
 
 
